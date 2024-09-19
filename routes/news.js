@@ -3,6 +3,7 @@ const axios = require('axios');
 const { XMLParser } = require('fast-xml-parser');
 
 const config = require('../configuration');
+const { loadPostByLink } = require('../services/post-loader');
 
 const router = express.Router();
 
@@ -13,6 +14,9 @@ router.get('/:date', async (req, res, next) => {
 
   const parser = new XMLParser();
   const result = parser.parse(data);
+  console.log(result.rss.channel.item)
+  const post = await loadPostByLink(result.rss.channel.item[0].link);
+  console.log(post);
 
   res.render('news', { title: 'RIA', items: result.rss.channel.item });
 });

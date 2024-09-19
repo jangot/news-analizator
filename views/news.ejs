@@ -8,7 +8,9 @@
     <h1><%= title %></h1>
     <ul>
       <% for(var i = 0; i < items.length; i++) {%>
-        <li><%= items[i].title %></li>
+        <li>
+          <a href="<%= items[i].link %>"><%= items[i].title %></a>
+        </li>
       <% } %>
     </ul>
   </body>
