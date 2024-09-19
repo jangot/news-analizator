@@ -3,15 +3,32 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+      function toggleNews(index) {
+        const el = document.querySelector(`.news_${index}`);
+        const display = el.style.display;
+
+        el.style.display = display === 'none' ? 'block' : 'none';
+      }
+    </script>
   </head>
   <body>
     <h1><%= title %></h1>
-    <ul>
+    <div>
       <% for(var i = 0; i < items.length; i++) {%>
-        <li>
-          <a href="<%= items[i].link %>"><%= items[i].title %></a>
-        </li>
+        <div>
+          <h4><%= items[i].title %></h4>
+          <p>
+            <a href="<%= items[i].link %>" target="_blank">open link</a>
+          </p>
+          <div>
+            <span style="cursor: pointer" onclick="toggleNews(<%= i %>)">open text</span>
+            <div style="display: none" class="news_<%= i %>">
+              <%= items[i].text %>
+            </div>
+          </div>
+        </div>
       <% } %>
-    </ul>
+    </div>
   </body>
 </html>

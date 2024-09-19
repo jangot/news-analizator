@@ -14,11 +14,24 @@ router.get('/:date', async (req, res, next) => {
 
   const parser = new XMLParser();
   const result = parser.parse(data);
-  console.log(result.rss.channel.item)
   const post = await loadPostByLink(result.rss.channel.item[0].link);
-  console.log(post);
 
-  res.render('news', { title: 'RIA', items: result.rss.channel.item });
+  const items = [];
+  for (let i = 0; i < result.rss.channel.item.length; i++) {
+    const news = result.rss.channel.item[i];
+
+    const text = await loadPostByLink(news.link);
+    console.log(news.title, 'loaded');
+    items.push({
+      title: news.title,
+      link: news.link,
+      text,
+    });
+
+    if (i === 4) break;
+  }
+
+  res.render('news', { title: 'RIA', items });
 });
 
 module.exports = router;
