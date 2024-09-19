@@ -1,37 +1,27 @@
 #!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
 const app = require('../app');
 const debug = require('debug')('ria-analizator:server');
 const http = require('http');
 
-/**
- * Get port from environment and store in Express.
- */
+const { sequelize } = require('../models');
 
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+async function run() {
+  await sequelize.sync({ force: true })
 
-/**
- * Create HTTP server.
- */
+  const port = normalizePort(process.env.PORT || '3000');
+  app.set('port', port);
+  const server = http.createServer(app);
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', () => {
+    const addr = server.address();
+    const bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+  });
+}
 
-const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Normalize a port into a number, string, or false.
- */
 
 function normalizePort(val) {
   const port = parseInt(val, 10);
@@ -48,10 +38,6 @@ function normalizePort(val) {
 
   return false;
 }
-
-/**
- * Event listener for HTTP server "error" event.
- */
 
 function onError(error) {
   if (error.syscall !== 'listen') {
@@ -77,14 +63,11 @@ function onError(error) {
   }
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+run()
+    .then(() => {
+      console.log('Success start')
+    })
+    .catch((error) => {
+      console.error(error);
+      console.log('Fail')
+    });

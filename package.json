@@ -16,6 +16,10 @@
     "http-errors": "~1.6.3",
     "jsdom": "^25.0.0",
     "libxmljs": "^1.0.11",
-    "morgan": "~1.9.1"
+    "moment": "^2.30.1",
+    "morgan": "~1.9.1",
+    "pg": "^8.13.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3"
   }
 }
