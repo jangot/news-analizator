@@ -1,0 +1,5 @@
+### Run scan
+GET http://localhost:3030/news/scan/20240901
+
+### Posts by day
+GET http://localhost:3030/news/has/09/21

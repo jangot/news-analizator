@@ -1,8 +1,9 @@
 module.exports = {
     apps : [{
-        name   : "ria-analyzer",
-        script : "./bin/www",
+        name   : 'ria-analyzer',
+        script : './bin/www',
         node_args: '--env-file .env.development',
+        ignore_watch: ['pgdata', '.idea', 'node_modules', 'http-client'],
         watch: true,
     }]
 }
