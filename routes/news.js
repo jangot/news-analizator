@@ -1,9 +1,7 @@
 const express = require('express');
-const axios = require('axios');
-const { XMLParser } = require('fast-xml-parser');
 
 const config = require('../configuration');
-const { loadPosts, loadArchiveByDay, loadDayPortion } = require('../services/post-loader');
+const { loadPosts, loadDayPortion } = require('../services/post-loader');
 const {getPostsByDay} = require('../services/post-retriever');
 
 const router = express.Router();

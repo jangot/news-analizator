@@ -4,26 +4,13 @@ const moment = require('moment');
 const crypto = require('crypto');
 
 const { News } = require('../models');
-const config = require('../configuration');
 
 function getHash(str) {
     return crypto.createHash('sha1').update(str).digest('hex');
 }
 
-
-// https://ria.ru/services/20240902/more.html?id=0&date=20240902T23:59:59
-async function loadArchiveByDay(date) {
-    const { data } = await axios.get(`${config.riaUrl}/${date}`);
-
-    const dom = new JSDOM(data);
-    const document = dom.window.document;
-
-    const elements = document.querySelectorAll('.list-item__content .list-item__title');
-    const linksList = [];
-    elements.forEach((el) => {
-        linksList.push(el.href);
-    });
-    return linksList;
+function cleanString(str) {
+    return str.replace(/<\/?[^>]+(>|$)/g, "").replace(/^[^\.]+РИА Новости\.\s*/i, "");
 }
 
 async function loadDayPortion(url) {
@@ -53,14 +40,12 @@ async function loadPostByLink (link) {
 
     const res = [];
     elements.forEach((el) => {
-        res.push(el.innerHTML);
+        res.push(cleanString(el.innerHTML));
     });
 
     const date = document.querySelector('.article__info-date a').innerHTML;
-    console.log('-----------', date)
-    console.log(moment(date, 'HH:mm DD.MM.YYYY').toDate())
     return {
-        body: res.join('\n').replace(/<\/?[^>]+(>|$)/g, ""),
+        body: res.join('\n'),
         date: moment(date, 'HH:mm DD.MM.YYYY').toDate()
     };
 }
@@ -68,13 +53,20 @@ async function loadPostByLink (link) {
 async function loadPosts(postsList) {
     for (let i = 0; i < postsList.length; i++) {
         const post = postsList[i];
+        const id = getHash(post.link);
 
-        console.log('post.link', post.link);
+        const exists = await News.findOne({ where: { id } });
+
+        if (exists) {
+            console.log('post was loaded', post.link, id);
+            continue;
+        }
+
+        console.log('Will load post', post.link, id)
         const { body, date } = await loadPostByLink(post.link);
-
         await News.create({
-            id: getHash(post.link),
-            title: post.title,
+            id,
+            title: cleanString(post.title),
             link: post.link,
             date,
             body,
@@ -84,8 +76,6 @@ async function loadPosts(postsList) {
 
 module.exports = {
     loadPosts,
-    loadPostByLink,
-    loadArchiveByDay,
     loadDayPortion,
 }
 

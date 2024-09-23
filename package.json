@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "DEBUG=ria-analizator:server node --env-file=.env.development ./bin/www",
+    "scan": "node --env-file=.env.development ./bin/scan.js",
     "run-db": "./bin/db.sh"
   },
   "dependencies": {
