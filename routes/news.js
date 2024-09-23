@@ -3,20 +3,30 @@ const axios = require('axios');
 const { XMLParser } = require('fast-xml-parser');
 
 const config = require('../configuration');
-const { loadPosts } = require('../services/post-loader');
+const { loadPosts, loadArchiveByDay, loadDayPortion } = require('../services/post-loader');
 const {getPostsByDay} = require('../services/post-retriever');
 
 const router = express.Router();
 
 // 20240901
 router.get('/scan/:date', async (req, res, next) => {
-  console.log(req.params.date)
-  const { data } = await axios.get(`${config.riaUrl}/${req.params.date}/index.xml`);
+  let url = `${config.riaUrl}/services/${req.params.date}/more.html?id=0&date=${req.params.date}T235959`;
 
-  const parser = new XMLParser();
-  const result = parser.parse(data);
+  let result = [];
+  while (url) {
+    console.log(url);
+    let { links, nextUrl } = await loadDayPortion(url);
+    result = [
+        ...result,
+        ...links,
+    ];
+    url = nextUrl ? `${config.riaUrl}${nextUrl}` : null;
 
-  await loadPosts(result.rss.channel.item);
+    await loadPosts(links);
+    console.log('next')
+  }
+
+  console.log('done')
 
   res.send('success');
 });
