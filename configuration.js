@@ -5,4 +5,7 @@ module.exports = {
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
     },
+    openApi: {
+        key: process.env.OPEN_API_KEY
+    }
 }

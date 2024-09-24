@@ -1,8 +1,6 @@
-const { sequelize } = require('../models');
 const config = require('../configuration');
-const {loadDayPortion, loadPosts} = require('../services/post-loader');
-const moment = require('moment')
-
+const { loadDayPortion, loadPosts } = require('../services/post-loader');
+const { runScript } = require('../services/run-script');
 
 // const START_DAY = 1;
 // const LAST_DAY = 30;
@@ -20,8 +18,8 @@ async function loadDay(date) {
         await loadPosts(links);
     }
 }
-async function run() {
-    await sequelize.sync({ force: false })
+
+runScript(async () => {
     let day = START_DAY
 
     while (day <= LAST_DAY) {
@@ -29,14 +27,4 @@ async function run() {
         await loadDay(date);
         day++;
     }
-
-    console.log('Scan was finished');
-}
-run()
-    .then(() => {
-        console.log('Success');
-    })
-    .catch((error) => {
-        console.error(error);
-        console.log('Fail')
-    });
+}, 'scan script');
