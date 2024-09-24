@@ -6,24 +6,46 @@ const {runScript} = require('../services/run-script');
 
 const openai = new OpenAI({ apiKey: config.openApi.key});
 
-runScript(async () => {
-    const one = await News.findOne({ where: {} });
+const LIMIT = 100;
 
-    if (!one) {
-        throw new Error('No news');
-    }
+async function getKeywords(title, body) {
+    const text = `${title}\n\n${body}`;
+    const content = `
+    Выдели ключевые слова из текста новости и верни эти ключевые слова одной строкой через запятую, без твоих комментариев,
+    Мне нужно максимум 20 самых важных ключевых слова.
+    вот эта новость:
+    \n\n${text}
+    `;
 
-    const text = `${one.title}\n\n${one.body}`;
+    console.log('PROMT:')
+    console.log(content);
+
     const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [
             { role: 'system', content: 'You are a helpful assistant.' },
             {
                 role: 'user',
-                content: `Выдели ключевые слова из следующего текста:\n\n${text}`,
+                content,
             },
         ],
     });
 
-    console.log(completion.choices[0].message);
+    return completion.choices[0].message.content;
+}
+
+runScript(async () => {
+    for (let i = 0; i < LIMIT; i++) {
+        const news = await News.findOne({ where: { keywords: null } });
+        if (!news) {
+            console.log('No any news without keywords');
+            return;
+        }
+        news.keywords = await getKeywords(news.title, news.body);
+        console.log('--------------------')
+        console.log(news.title);
+        console.log(news.keywords);
+        await news.save();
+        console.log('SAVED');
+    }
 }, 'Keywords');

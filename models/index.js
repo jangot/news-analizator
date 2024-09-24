@@ -16,7 +16,7 @@ const News = sequelize.define('News', {
     body: DataTypes.TEXT('long'),
     link: DataTypes.STRING,
     keywords: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT('long'),
         allowNull: true,
     },
     date: DataTypes.DATE,
