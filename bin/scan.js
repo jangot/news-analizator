@@ -6,7 +6,7 @@ const moment = require('moment')
 
 // const START_DAY = 1;
 // const LAST_DAY = 30;
-const START_DAY = 3;
+const START_DAY = 6;
 const LAST_DAY = 10;
 const otherDate = '202409';
 
