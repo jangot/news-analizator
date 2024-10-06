@@ -7,5 +7,8 @@ module.exports = {
     },
     openApi: {
         key: process.env.OPEN_API_KEY
+    },
+    files: {
+        destinationFolder: process.env.DESTINATION_FOLDER
     }
 }

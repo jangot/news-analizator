@@ -6,7 +6,9 @@ const {runScript} = require('../services/run-script');
 
 const openai = new OpenAI({ apiKey: config.openApi.key});
 
-const LIMIT = 2200;
+const LIMIT = 100;
+const offset = Number(process.argv[2] || 0);
+console.log('offset', offset);
 
 async function getKeywords(title, body) {
     const text = `${title}\n\n${body}`;
@@ -36,6 +38,7 @@ runScript(async () => {
         const news = await News.findOne({
             where: { keywords: null },
             order: [['date', 'ASC']],
+            offset
         });
         if (!news) {
             console.log('No any news without keywords');
