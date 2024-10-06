@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style>
+        .days-container {
+            display: flex;
+            overflow: scroll;
+        }
+        .day-item {
+            flex: 0 0 300px;
+            border: 1px silver solid;
+            margin: 5px;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-<h1><%= title %></h1>
-<ul>
+<div class="days-container">
     <% data.forEach(function(it) { %>
-        <li>
-            Day :<%= it.day %>
-            <ul>
-                <% it.keywords_count.forEach(function(keyword) { %>
-                    <li><%= keyword.keyword %> : <%= keyword.count %></li>
+        <div class="day-item">
+            <h3><%= it.day %></h3>
+            <div>
+                <% it.keywords_count.forEach(function(keyword, index) { %>
+                    <% if (index > 20) return null; %>
+                    <div><%= keyword.keyword %> : <%= keyword.count %></div>
                 <% }); %>
-            </ul>
-        </li>
+            </div>
+        </div>
     <% }); %>
-</ul>
+</div>
 </body>
 </html>

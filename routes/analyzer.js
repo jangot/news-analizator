@@ -20,7 +20,7 @@ function getQuery(from, to, minCount) {
             ${TABLE_NAME.NEWS}."date" >= '${from}' AND ${TABLE_NAME.NEWS}."date" < '${to}'
             GROUP BY
             day, keyword
-            ) AS subquery
+        ) AS subquery
         WHERE
             count > ${minCount}
         GROUP BY
@@ -39,7 +39,6 @@ router.get('/:from/:to', async function(req, res, next) {
 
         const query = getQuery(from, to, minCount);
         const [ data] = await sequelize.query(query);
-        console.log(data)
         res.render('analyzer', { title: 'Analyzer', data });
     } catch (error) {
         res.render('error', { error, message: 'Query error' });
