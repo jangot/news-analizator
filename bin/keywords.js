@@ -6,7 +6,7 @@ const {runScript} = require('../services/run-script');
 
 const openai = new OpenAI({ apiKey: config.openApi.key});
 
-const LIMIT = 100;
+const LIMIT = 2200;
 
 async function getKeywords(title, body) {
     const text = `${title}\n\n${body}`;
@@ -16,9 +16,6 @@ async function getKeywords(title, body) {
     вот эта новость:
     \n\n${text}
     `;
-
-    console.log('PROMT:')
-    console.log(content);
 
     const completion = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
@@ -36,16 +33,18 @@ async function getKeywords(title, body) {
 
 runScript(async () => {
     for (let i = 0; i < LIMIT; i++) {
-        const news = await News.findOne({ where: { keywords: null } });
+        const news = await News.findOne({
+            where: { keywords: null },
+            order: [['date', 'ASC']],
+        });
         if (!news) {
             console.log('No any news without keywords');
             return;
         }
         news.keywords = await getKeywords(news.title, news.body);
-        console.log('--------------------')
-        console.log(news.title);
+        console.log(i, '--------------------');
+        console.log(news.title)
         console.log(news.keywords);
         await news.save();
-        console.log('SAVED');
     }
 }, 'Keywords');

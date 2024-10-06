@@ -4,8 +4,8 @@ const { runScript } = require('../services/run-script');
 
 // const START_DAY = 1;
 // const LAST_DAY = 30;
-const START_DAY = 6;
-const LAST_DAY = 10;
+const START_DAY = 21;
+const LAST_DAY = 24;
 const otherDate = '202409';
 
 async function loadDay(date) {
@@ -24,7 +24,13 @@ runScript(async () => {
 
     while (day <= LAST_DAY) {
         const date = otherDate + String(day).padStart(2, '0');
-        await loadDay(date);
+        try {
+            await loadDay(date);
+        } catch (error) {
+            console.error(error);
+            console.log('Scan stopped', date)
+            break
+        }
         day++;
     }
 }, 'scan script');
