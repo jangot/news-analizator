@@ -4,11 +4,11 @@ const moment = require('moment');
 
 const router = express.Router();
 
-function getQuery(from, to) {
+function getQuery(from, to, minCount) {
     return `
         SELECT
-            day,
-            jsonb_agg(jsonb_build_object('keyword', keyword, 'count', count)) AS keywords_count
+            to_char(day, 'YYYY-MM-DD') AS day,
+    jsonb_agg(jsonb_build_object('keyword', keyword, 'count', count) ORDER BY count DESC) AS keywords_count
         FROM (
             SELECT
             date_trunc('day', ${TABLE_NAME.NEWS}."date") AS day,
@@ -21,6 +21,8 @@ function getQuery(from, to) {
             GROUP BY
             day, keyword
             ) AS subquery
+        WHERE
+            count > ${minCount}
         GROUP BY
             day
         ORDER BY
@@ -33,12 +35,12 @@ router.get('/:from/:to', async function(req, res, next) {
     const to = moment(req.params.to).format('YYYY-MM-DD');
 
     try {
-        // const query = getQuery('2024-09-01', '2024-10-01');
-        const query = getQuery(from, to);
-        console.log(query)
+        const minCount = req.query.min ? Number(req.query.min) : 10;
+
+        const query = getQuery(from, to, minCount);
         const [ data] = await sequelize.query(query);
         console.log(data)
-        res.render('analyzer', { title: 'Analyzer' });
+        res.render('analyzer', { title: 'Analyzer', data });
     } catch (error) {
         res.render('error', { error, message: 'Query error' });
     }
