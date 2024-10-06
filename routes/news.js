@@ -2,7 +2,7 @@ const express = require('express');
 
 const config = require('../configuration');
 const { loadPosts, loadDayPortion } = require('../services/post-loader');
-const {getPostsByDay} = require('../services/post-retriever');
+const { getPostsByDay } = require('../services/post-retriever');
 
 const router = express.Router();
 

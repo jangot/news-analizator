@@ -5,9 +5,14 @@ const { db } = require('../configuration');
 const sequelize = new Sequelize(db.name, db.user, db.password, {
     host: 'localhost',
     dialect: 'postgres',
+    logging: true,
 });
 
-const News = sequelize.define('News', {
+const TABLE_NAME = {
+    NEWS: 'news',
+}
+
+const News = sequelize.define(TABLE_NAME.NEWS, {
     id: {
         type: DataTypes.STRING,
         primaryKey: true
@@ -23,6 +28,7 @@ const News = sequelize.define('News', {
 });
 
 module.exports = {
+    TABLE_NAME,
     sequelize,
     News
 };
