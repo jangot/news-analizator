@@ -4,9 +4,9 @@ const { runScript } = require('../services/run-script');
 
 // const START_DAY = 1;
 // const LAST_DAY = 30;
-const START_DAY = 25;
-const LAST_DAY = 30;
-const otherDate = '202409';
+const START_DAY = 12;
+const LAST_DAY = 31;
+const otherDate = '202408';
 
 async function loadDay(date) {
     let url = `${config.riaUrl}/services/${date}/more.html?id=0&date=${date}T235959`;

@@ -6,7 +6,7 @@ const {runScript} = require('../services/run-script');
 
 const openai = new OpenAI({ apiKey: config.openApi.key});
 
-const LIMIT = 100;
+const LIMIT = 5000;
 const offset = Number(process.argv[2] || 0);
 console.log('offset', offset);
 

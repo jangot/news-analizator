@@ -8,7 +8,8 @@ function getQuery(from, to, minCount) {
         FROM (
             SELECT
             date_trunc('day', ${TABLE_NAME.NEWS}."date") AS day,
-            unnest(string_to_array(keywords, ',')) AS keyword,
+            -- unnest(regexp_split_to_array(keywords, ',\\s*')) AS keyword,
+            lower (replace(unnest(regexp_split_to_array(keywords, ',\\s*')), '.', '')) AS keyword,
             COUNT(*) AS count
             FROM
             ${TABLE_NAME.NEWS}
