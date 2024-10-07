@@ -10,6 +10,52 @@ const LIMIT = 5000;
 const offset = Number(process.argv[2] || 0);
 console.log('offset', offset);
 
+
+async function getKeywordsList(newsArray) {
+    // Создаем контент запроса с уникальными идентификаторами для каждой новости
+    const content = newsArray.map(({ title, body }, index) =>
+        `Новость ID${index + 1}:\n${title}\n\n${body}`
+    ).join('\n\n---\n\n');
+
+    const requestContent = `
+    Выдели ключевые слова из текста новостей и верни их в формате:
+    Новость ID1: ключевые слова,
+    Новость ID2: ключевые слова,
+    и так далее.
+    Мне нужно максимум 20 самых важных ключевых слова для каждой новости.
+    Вот эти новости:
+    \n\n${content}
+    `;
+
+    const completion = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+            { role: 'system', content: 'You are a helpful assistant.' },
+            {
+                role: 'user',
+                content: requestContent,
+            },
+        ],
+    });
+
+    // Обработка ответа
+    const responseContent = completion.choices[0].message.content;
+
+    // Разделение ответа на строки по новостям
+    const keywordLines = responseContent.split('\n').filter(line => line.trim() !== '');
+    const keywords = {};
+
+    // Извлечение ключевых слов для каждой новости
+    keywordLines.forEach(line => {
+        const [newsLabel, keywordsString] = line.split(':');
+        if (newsLabel && keywordsString) {
+            keywords[newsLabel.trim()] = keywordsString.trim().split(',').map(k => k.trim());
+        }
+    });
+
+    return keywords; // Возвращаем объект с ключевыми словами для каждой новости
+}
+
 async function getKeywords(title, body) {
     const text = `${title}\n\n${body}`;
     const content = `
@@ -34,20 +80,21 @@ async function getKeywords(title, body) {
 }
 
 runScript(async () => {
-    for (let i = 0; i < LIMIT; i++) {
-        const news = await News.findOne({
-            where: { keywords: null },
-            order: [['date', 'ASC']],
-            offset
-        });
-        if (!news) {
-            console.log('No any news without keywords');
-            return;
-        }
+    const requestParams = {
+        where: { keywords: null },
+        order: [['date', 'DESC']],
+        offset
+    }
+
+    let news = await News.findOne(requestParams);
+
+    while (news) {
         news.keywords = await getKeywords(news.title, news.body);
         console.log('');
         console.log('[TITLE]', news.title)
         console.log('[KEYWORDS]', news.keywords);
         await news.save();
+
+        news = await News.findOne(requestParams);
     }
 }, 'Keywords');
