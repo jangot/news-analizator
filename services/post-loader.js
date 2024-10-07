@@ -50,28 +50,31 @@ async function loadPostByLink (link) {
     };
 }
 
-async function loadPosts(postsList) {
-    for (let i = 0; i < postsList.length; i++) {
-        const post = postsList[i];
-        const id = getHash(post.link);
+async function loadOnePost(post) {
+    const id = getHash(post.link);
 
-        const exists = await News.findOne({ where: { id } });
+    const exists = await News.findOne({ where: { id } });
 
-        if (exists) {
-            console.log('post was loaded', post.link, id);
-            continue;
-        }
-
-        console.log('Will load post', post.link, id)
-        const { body, date } = await loadPostByLink(post.link);
-        await News.create({
-            id,
-            title: cleanString(post.title),
-            link: post.link,
-            date,
-            body,
-        });
+    if (exists) {
+        console.log('post was loaded', post.link, id);
+        return;
     }
+
+    console.log('Will load post', post.link, id)
+    const { body, date } = await loadPostByLink(post.link);
+    await News.create({
+        id,
+        title: cleanString(post.title),
+        link: post.link,
+        date,
+        body,
+    });
+}
+
+async function loadPosts(postsList) {
+    const promises = postsList.map((post) => loadOnePost(post));
+
+    return Promise.all(promises);
 }
 
 module.exports = {

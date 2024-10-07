@@ -4,7 +4,7 @@ const { runScript } = require('../services/run-script');
 
 // const START_DAY = 1;
 // const LAST_DAY = 30;
-const START_DAY = 1;
+const START_DAY = 2;
 const LAST_DAY = 6;
 const otherDate = '202410';
 

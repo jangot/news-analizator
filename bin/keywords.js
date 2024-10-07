@@ -45,9 +45,9 @@ runScript(async () => {
             return;
         }
         news.keywords = await getKeywords(news.title, news.body);
-        console.log(i, '--------------------');
-        console.log(news.title)
-        console.log(news.keywords);
+        console.log('');
+        console.log('[TITLE]', news.title)
+        console.log('[KEYWORDS]', news.keywords);
         await news.save();
     }
 }, 'Keywords');
