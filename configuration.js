@@ -10,5 +10,9 @@ module.exports = {
     },
     files: {
         destinationFolder: process.env.DESTINATION_FOLDER
+    },
+    apiNews: {
+        url: process.env.NEWS_API_URL,
+        key: process.env.NEWS_API_KEY,
     }
 }

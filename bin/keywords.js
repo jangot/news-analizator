@@ -20,19 +20,23 @@ runScript(async () => {
 
     let news = await News.findAll(requestParams);
     while (news.length > 0) {
-        console.log('-------------------------------------------');
-        console.time('Generation');
-        const keywords = await getKeywords(news);
-        console.timeEnd('Generation');
-        for (const one of news) {
-            if (keywords[one.id]) {
-                one.keywords = keywords[one.id].join(',');
+        try {
+            console.log('-------------------------------------------');
+            console.time('Generation');
+            const keywords = await getKeywords(news);
+            console.timeEnd('Generation');
+            for (const one of news) {
+                if (keywords[one.id]) {
+                    one.keywords = keywords[one.id].join(',');
 
-                console.log('')
-                console.log(one.id, one.title, one.date);
-                console.log(one.keywords)
-                await one.save();
+                    console.log('')
+                    console.log(one.id, one.title, one.date);
+                    console.log(one.keywords)
+                    await one.save();
+                }
             }
+        } catch (error) {
+            console.error(error);
         }
 
         news = await News.findAll(requestParams);

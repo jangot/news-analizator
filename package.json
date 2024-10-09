@@ -11,6 +11,7 @@
     "keywords-20": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js 20",
     "keywords-30": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js 30",
     "gen-files": "node --env-file=.env.development --env-file=.env.local ./bin/save-data.js",
+    "top": "node --env-file=.env.development --env-file=.env.local ./bin/top-news.js -s \"2024-10-01\" -e \"2024-10-01\"",
     "run-db": "./bin/db.sh"
   },
   "dependencies": {
