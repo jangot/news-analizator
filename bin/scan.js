@@ -21,11 +21,17 @@ const {
     { name: 'waiting', alias: 'w' },
 ]);
 
+console.log(JSON.stringify({ year, month, startDay, endDay }, null, 2));
+
 function wait(time) {
     console.log('waiting', time);
     return new Promise((resolve) => {
         setTimeout(resolve, Number(time));
     });
+}
+
+function setLeadingZeros(v, c = 2) {
+    return String(v).padStart(c, '0');
 }
 
 async function loadDay(date) {
@@ -46,11 +52,11 @@ async function loadDay(date) {
 }
 
 runScript(async () => {
-    const baseDate = `${year}${month}`;
+    const baseDate = `${year}${setLeadingZeros(month)}`;
     let day = Number(startDay)
 
     while (day <= endDay) {
-        const date = baseDate + String(day).padStart(2, '0');
+        const date = baseDate + setLeadingZeros(day);
         try {
             await loadDay(date);
         } catch (error) {

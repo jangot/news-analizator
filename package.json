@@ -5,11 +5,11 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "DEBUG=ria-analizator:server node --env-file=.env.development ./bin/www",
-    "scan": "node --env-file=.env.development --env-file=.env.local ./bin/scan.js --limit=5 --offset=0",
+    "scan": "node --env-file=.env.development --env-file=.env.local ./bin/scan.js",
     "keywords": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js",
-    "keywords-10": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js 10",
-    "keywords-20": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js 20",
-    "keywords-30": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js 30",
+    "keywords-10": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js  --limit=5 --offset=10",
+    "keywords-20": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js  --limit=5 --offset=20",
+    "keywords-30": "node --env-file=.env.development --env-file=.env.local ./bin/keywords.js  --limit=5 --offset=30",
     "gen-files": "node --env-file=.env.development --env-file=.env.local ./bin/save-data.js",
     "top": "node --env-file=.env.development --env-file=.env.local ./bin/top-news.js -s \"2024-10-01\" -e \"2024-10-01\"",
     "run-db": "./bin/db.sh"

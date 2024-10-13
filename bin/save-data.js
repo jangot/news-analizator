@@ -5,7 +5,7 @@ const { runScript } = require('../services/run-script');
 const { sequelize } = require('../models');
 const {getQuery} = require('../services/analyzer');
 
-const FROM = '2024-08-01';
+const FROM = '2014-01-01';
 const TO = '2024-11-01';
 
 function fileExists(path) {

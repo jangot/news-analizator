@@ -4,16 +4,17 @@ const {  News } = require('../models');
 const { runScript } = require('../services/run-script');
 const { getKeywords } = require('../services/open-api');
 
-
-const { limit = 5, offset = 0 } = commandLineArgs([
+console.log(process.argv)
+const { limit = 5, offset = 0, reverse = 1 } = commandLineArgs([
     { name: 'limit', alias: 'l', type: Number },
     { name: 'offset', alias: 'o', type: Number },
+    { name: 'reverse', alias: 'r', type: Number },
 ]);
 
 runScript(async () => {
     const requestParams = {
         where: { keywords: null },
-        order: [['date', 'DESC']],
+        order: [['date', reverse > 0 ? 'DESC' : 'ASC']],
         offset,
         limit,
     }
