@@ -5,8 +5,8 @@ const { runScript } = require('../services/run-script');
 const { sequelize } = require('../models');
 const {getQuery} = require('../services/analyzer');
 
-const FROM = '2014-01-01';
-const TO = '2024-11-01';
+const FROM = '2024-10-01';
+const TO = '2024-10-30';
 
 function fileExists(path) {
     return fs.stat(path).then(() => true, () => false)

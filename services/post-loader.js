@@ -43,14 +43,24 @@ async function loadPostByLink (link) {
         res.push(cleanString(el.innerHTML));
     });
 
-    const date = document.querySelector('.article__info-date a').innerHTML;
-    return {
-        body: res.join('\n'),
-        date: moment(date, 'HH:mm DD.MM.YYYY').toDate()
-    };
+    if (res.length === 0) {
+        return {};
+    }
+    try {
+        const a = document.querySelector('.article__info-date a');
+
+        return {
+            body: res.join('\n'),
+            date: moment(a.innerHTML, 'HH:mm DD.MM.YYYY').toDate()
+        };
+    } catch (error) {
+        console.error(error);
+        throw new Error(`Loading news error: ${link}`);
+    }
+
 }
 
-async function loadOnePost(post) {
+async function loadOnePost(post, loadingData) {
     const id = getHash(post.link);
 
     const exists = await News.findOne({ where: { id } });
@@ -61,7 +71,11 @@ async function loadOnePost(post) {
     }
 
     console.log('Will load post', post.link, id)
-    const { body, date } = await loadPostByLink(post.link);
+    const { body, date } = await loadPostByLink(post.link, loadingData);
+    if (!body) {
+        console.log('Post was not loaded', post.link, id);
+        return;
+    }
     await News.create({
         id,
         title: cleanString(post.title),
