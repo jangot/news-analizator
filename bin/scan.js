@@ -5,6 +5,7 @@ const commandLineArgs = require('command-line-args');
 const config = require('../configuration');
 const { loadDayPortion, loadPosts } = require('../services/post-loader');
 const { runScript } = require('../services/run-script');
+const  { setLeadingZeros } = require('../services/utils');
 
 const todayMorning = moment();
 const {
@@ -28,10 +29,6 @@ function wait(time) {
     return new Promise((resolve) => {
         setTimeout(resolve, Number(time));
     });
-}
-
-function setLeadingZeros(v, c = 2) {
-    return String(v).padStart(c, '0');
 }
 
 async function loadDay(date) {
