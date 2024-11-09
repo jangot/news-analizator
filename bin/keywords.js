@@ -3,13 +3,15 @@ const commandLineArgs = require('command-line-args');
 const {  News } = require('../models');
 const { runScript } = require('../services/run-script');
 const { getKeywords } = require('../services/open-api');
+const { wait } = require('../services/utils');
 
-console.log(process.argv)
 const { limit = 5, offset = 0, reverse = 1 } = commandLineArgs([
     { name: 'limit', alias: 'l', type: Number },
     { name: 'offset', alias: 'o', type: Number },
     { name: 'reverse', alias: 'r', type: Number },
 ]);
+
+
 
 runScript(async () => {
     const requestParams = {
@@ -20,7 +22,7 @@ runScript(async () => {
     }
 
     let news = await News.findAll(requestParams);
-    while (news.length > 0) {
+    while (true) {
         try {
             console.log('-------------------------------------------');
             console.time('Generation');
@@ -41,5 +43,8 @@ runScript(async () => {
         }
 
         news = await News.findAll(requestParams);
+        if (news.length === 0) {
+            await wait(60000);
+        }
     }
 }, 'Keywords');

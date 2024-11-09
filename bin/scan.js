@@ -5,7 +5,7 @@ const commandLineArgs = require('command-line-args');
 const config = require('../configuration');
 const { loadDayPortion, loadPosts } = require('../services/post-loader');
 const { runScript } = require('../services/run-script');
-const  { setLeadingZeros } = require('../services/utils');
+const { setLeadingZeros, wait } = require('../services/utils');
 
 const yesterdayMorning = moment().add(-1, 'days');
 const {
@@ -23,13 +23,6 @@ const {
 ]);
 
 console.log(JSON.stringify({ year, month, startDay, endDay }, null, 2));
-
-function wait(time) {
-    console.log('waiting', time);
-    return new Promise((resolve) => {
-        setTimeout(resolve, Number(time));
-    });
-}
 
 async function loadDay(date) {
     let url = `${config.riaUrl}/services/${date}/more.html?id=0&date=${date}T235959`;
