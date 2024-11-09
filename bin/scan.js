@@ -20,7 +20,7 @@ const {
     { name: 'startDay', alias: 's' },
     { name: 'endDay', alias: 'e' },
     { name: 'waiting', alias: 'w' },
-]);
+]);-
 
 console.log(JSON.stringify({ year, month, startDay, endDay }, null, 2));
 

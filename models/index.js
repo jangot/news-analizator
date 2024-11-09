@@ -3,7 +3,7 @@ const { db } = require('../configuration');
 
 
 const sequelize = new Sequelize(db.name, db.user, db.password, {
-    host: 'localhost',
+    host: db.host,
     dialect: 'postgres',
     logging: true,
 });
