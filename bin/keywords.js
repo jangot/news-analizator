@@ -21,8 +21,14 @@ runScript(async () => {
         limit,
     }
 
-    let news = await News.findAll(requestParams);
     while (true) {
+        const news = await News.findAll(requestParams);
+        if (news.length === 0) {
+            console.log('No news for update');
+            await wait(60000);
+            continue;
+        }
+
         try {
             console.log('-------------------------------------------');
             console.time('Generation');
@@ -42,9 +48,6 @@ runScript(async () => {
             console.error(error);
         }
 
-        news = await News.findAll(requestParams);
-        if (news.length === 0) {
-            await wait(60000);
-        }
+
     }
 }, 'Keywords');
