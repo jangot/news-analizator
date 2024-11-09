@@ -12,22 +12,14 @@ const  { setLeadingZeros, fileExists } = require('../services/utils');
 
 const todayMorning = moment();
 const {
-    year = todayMorning.format('YYYY'),
-    month = todayMorning.format('MM'),
-    startDay = todayMorning.date(),
-    endDay = startDay,
+    from,
+    to
 } = commandLineArgs([
-    { name: 'year', alias: 'y' },
-    { name: 'month', alias: 'm' },
-    { name: 'startDay', alias: 's' },
-    { name: 'endDay', alias: 'e' },
-    { name: 'waiting', alias: 'w' },
+    { name: 'from', alias: 'f' },
+    { name: 'to', alias: 't' }
 ]);
 
 runScript(async () => {
-    const from = `${year}-${setLeadingZeros(month)}-${setLeadingZeros(startDay)}`
-    const to = `${year}-${setLeadingZeros(month)}-${setLeadingZeros(endDay)}`
-    ;
     const query = getQuery(from, to, 0);
     // console.log(query)
     const [ list] = await sequelize.query(query);
