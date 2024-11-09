@@ -7,11 +7,11 @@ const { loadDayPortion, loadPosts } = require('../services/post-loader');
 const { runScript } = require('../services/run-script');
 const  { setLeadingZeros } = require('../services/utils');
 
-const todayMorning = moment();
+const yesterdayMorning = moment().add(-1, 'days');
 const {
-    year = todayMorning.format('YYYY'),
-    month = todayMorning.format('MM'),
-    startDay = todayMorning.date(),
+    year = yesterdayMorning.format('YYYY'),
+    month = yesterdayMorning.format('MM'),
+    startDay = yesterdayMorning.date(),
     endDay = startDay,
     waiting = 100,
 } = commandLineArgs([
@@ -20,7 +20,7 @@ const {
     { name: 'startDay', alias: 's' },
     { name: 'endDay', alias: 'e' },
     { name: 'waiting', alias: 'w' },
-]);-
+]);
 
 console.log(JSON.stringify({ year, month, startDay, endDay }, null, 2));
 
